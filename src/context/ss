@@ -1,0 +1,43 @@
+ //add to cart
+  addToCart = (id) => {
+    //  get all items in current cart
+    let tempCart = [...this.state.cart]
+    // get all the products
+    let tempProducts = [...this.state.storeProducts]
+    // get the selected item that already in the current cart
+    let tempItem = tempCart.find((item) => item.id === id)
+    // if the selected item not in the cart => sure in the products list
+    if (!tempItem) {
+      // find the selected item in the list
+      tempItem = tempProducts.find((item) => item.id === id)
+      let total = tempItem.price
+      // will creat a new item in the cart
+      let cartItem = { ...tempItem, count: 1, total }
+      // update cart list with prev and new items
+      tempCart = [...tempCart, cartItem]
+    } else {
+      tempItem.count++
+      tempItem.total = tempItem.price * tempItem.count
+      tempItem.total = parseFloat(tempItem.total.toFixed(2))
+    }
+    this.setState(
+      () => {
+        return { cart: tempCart }
+      },
+      () => {
+        this.addTotals()
+        this.syncStorage()
+        this.openCart()
+      }
+    )
+  }
+
+   clearCart = () => {
+    this.setState({
+      cart: [],
+      cartItems: 0,
+      cartSubTotal: 0,
+      cartTax: 0,
+      cartTotal: 0,
+    })
+  }
